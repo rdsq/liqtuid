@@ -33,6 +33,11 @@ fn render_full(game: &Liqtui, columns: usize) -> usize {
 fn main() {
     let args = Args::parse();
 
+    if args.depth == 0 || (args.number == 0 && args.empty == 0) {
+        println!("Nothing can possibly go wrong, huh? I'm not stopping you though");
+    } else if args.empty == 0 {
+        println!("Congratulations, you are stuck");
+    }
     let mut game = Liqtui::new(args.number, args.depth, args.empty);
 
     let (Width(width), _) = terminal_size().expect("failed to get terminal size");
