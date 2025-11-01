@@ -12,7 +12,7 @@ use std::io::Write;
 #[command(version, about, long_about = None)]
 struct Args {
     /// Number of bottles and different colours
-    #[arg(short, long)]
+    #[arg(short, long, default_value_t = 6)]
     number: usize,
 
     /// How many individual units will bottles hold
