@@ -1,0 +1,13 @@
+[package]
+name = "liqtui"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+ansi_colours = "1.2.3"
+clap = { version = "4.5.51", features = ["derive"] }
+getch-rs = "0.2.0"
+rand = "0.9.2"
+random_color = "1.1.0"
+rgb = "0.8.52"
+terminal_size = "0.4.3"
