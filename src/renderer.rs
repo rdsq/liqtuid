@@ -33,7 +33,7 @@ pub fn render_game(game: &Liqtui, columns: usize) -> String {
                     let key = *KEYS.as_bytes().get(bottle_index).unwrap_or(&45 /* ASCII for `-` */) as char;
                     if game.selected.as_ref() == Some(&bottle_index) {
                         // for selected bottles
-                        result.push_str("\x1b[36m[");
+                        result.push_str("\x1b[36;1m[");
                     } else {
                         result.push_str("\x1b[2m[");
                     }

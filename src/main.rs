@@ -5,6 +5,7 @@ use clap::Parser;
 use object::Liqtui;
 use terminal_size::{Width, terminal_size};
 use getch_rs::{Getch, Key};
+use std::io::Write;
 
 /// TUI Liquid Sort Game
 #[derive(Parser, Debug)]
@@ -26,7 +27,8 @@ struct Args {
 fn render_full(game: &Liqtui, columns: usize) -> usize {
     let output = renderer::render_game(game, columns);
     print!("{}", output);
-    println!("\x1b[2mPress the keys shown over the bottles to select one, Ctrl+C to exit\x1b[0m");
+    print!("\n\x1b[2mPress the keys shown over the bottles to select one, Ctrl+C to exit\x1b[0m");
+    std::io::stdout().flush().expect("Failed to flush");
     output.matches('\n').count() + 1
 }
 
@@ -42,6 +44,7 @@ fn main() {
 
     let (Width(width), _) = terminal_size().expect("failed to get terminal size");
     let columns = ((width as f64 + 3.0) / 6.0).floor() as usize;
+    print!("\x1b[?25l"); // hide cursor
     let mut lines_printed = render_full(&game, columns);
 
     let getch = Getch::new();
@@ -60,7 +63,8 @@ fn main() {
             },
             Ok(Key::Ctrl('d')) | Ok(Key::Ctrl('c')) => break,
             Err(err) => { eprintln!("Error: {}", err); break; },
-            Ok(other) => println!("found key {:?}", other),
+            Ok(_) => {},
         }
     }
+    println!("\x1b[?25h"); // show cursor
 }
