@@ -54,7 +54,7 @@ fn main() {
                 // playing the game
                 if let Some(index) = renderer::KEYS.find(character) {
                     game.click_on_index(index);
-                    print!("\x1b[{}A", lines_printed);
+                    print!("\r\x1b[{}A", lines_printed);
                     lines_printed = render_full(&game, columns);
                     if game.check_win() {
                         break;
