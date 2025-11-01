@@ -24,12 +24,14 @@ struct Args {
     empty: usize,
 }
 
+const MSG: &str = "Press the keys shown over the bottles to select one, Ctrl+C to exit";
+
 fn render_full(game: &Liqtui, columns: usize) -> usize {
     let output = renderer::render_game(game, columns);
     print!("{}", output);
-    print!("\n\x1b[2mPress the keys shown over the bottles to select one, Ctrl+C to exit\x1b[0m");
+    print!("\n\x1b[2m{}\x1b[0m", MSG);
     std::io::stdout().flush().expect("Failed to flush");
-    output.matches('\n').count() + 1
+    output.matches('\n').count()
 }
 
 fn main() {
@@ -54,7 +56,7 @@ fn main() {
                 // playing the game
                 if let Some(index) = renderer::KEYS.find(character) {
                     game.click_on_index(index);
-                    print!("\r\x1b[{}A", lines_printed);
+                    print!("\r\x1b[{}A", lines_printed + (MSG.len() as f32 / width as f32).ceil() as usize);
                     lines_printed = render_full(&game, columns);
                     if game.check_win() {
                         break;
