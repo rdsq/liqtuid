@@ -63,6 +63,7 @@ impl Liqtui {
                 if selected == index {
                     // remove selection
                     self.selected = None;
+                    return; // this was a horrible thing to forget...
                 } else if self.bottles[index].len() == self.depth {
                     // that bottle will not accept more
                     return;
