@@ -1,8 +1,7 @@
 use rand::prelude::*;
-use random_color::RandomColor;
-use ansi_colours::ansi256_from_rgb;
+use crate::random_colour::random_colours;
 
-pub fn initial_layout(bottles: usize, depth: usize, rng: &mut rand::rngs::ThreadRng) -> Vec<Vec<usize>> {
+fn initial_layout(bottles: usize, depth: usize, rng: &mut rand::rngs::ThreadRng) -> Vec<Vec<usize>> {
     let mut layout = vec![];
     for i in 0..bottles {
         for _ in 0..depth {
@@ -12,18 +11,6 @@ pub fn initial_layout(bottles: usize, depth: usize, rng: &mut rand::rngs::Thread
     layout.shuffle(rng);
     let chunks: Vec<Vec<usize>> = layout.chunks(depth).map(|x| x.to_vec()).collect();
     chunks
-}
-
-pub fn random_colours(num: usize) -> Vec<u8> {
-    let mut result = Vec::new();
-    let mut generator_probably = RandomColor::new();
-    for _ in 0..num {
-        let rgb_arr = generator_probably.to_rgb_array();
-        let rgb = rgb::RGB8 { r: rgb_arr[0], g: rgb_arr[1], b: rgb_arr[2] };
-        let index = ansi256_from_rgb(rgb);
-        result.push(index);
-    }
-    result
 }
 
 pub struct Liqtui {
@@ -42,7 +29,7 @@ impl Liqtui {
         }
         Self {
             bottles,
-            colours: random_colours(number),
+            colours: random_colours(&mut rng, number),
             depth,
             selected: None,
         }

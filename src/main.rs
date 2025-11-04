@@ -1,5 +1,6 @@
 mod object;
 mod renderer;
+mod random_colour;
 
 use clap::Parser;
 use object::Liqtui;
