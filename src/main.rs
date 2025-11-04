@@ -42,6 +42,8 @@ fn main() {
         println!("Nothing can possibly go wrong, huh? I'm not stopping you though");
     } else if args.empty == 0 {
         println!("Congratulations, you are stuck");
+    } else if args.depth == 1 || args.number == 1 {
+        println!("Congratulations on a fair victory");
     }
     let mut game = Liqtui::new(args.number, args.depth, args.empty);
 
