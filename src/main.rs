@@ -3,7 +3,7 @@ mod renderer;
 mod random_colour;
 
 use clap::Parser;
-use object::Liqtui;
+use object::Liqtuid;
 use terminal_size::{Width, terminal_size};
 use getch_rs::{Getch, Key};
 use std::io::Write;
@@ -27,7 +27,7 @@ struct Args {
 
 const MSG: &str = "Press the keys shown over the bottles to select one, Ctrl+C to exit";
 
-fn render_full(game: &Liqtui, columns: usize) -> usize {
+fn render_full(game: &Liqtuid, columns: usize) -> usize {
     let output = renderer::render_game(game, columns);
     print!("{}", output);
     print!("\n\x1b[2m{}\x1b[0m", MSG);
@@ -45,7 +45,7 @@ fn main() {
     } else if args.depth == 1 || args.number == 1 {
         println!("Congratulations on a fair victory");
     }
-    let mut game = Liqtui::new(args.number, args.depth, args.empty);
+    let mut game = Liqtuid::new(args.number, args.depth, args.empty);
 
     let (Width(width), _) = terminal_size().expect("failed to get terminal size");
     let columns = ((width as f64 + 3.0) / 6.0).floor() as usize;

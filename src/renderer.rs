@@ -1,4 +1,4 @@
-use crate::object::Liqtui;
+use crate::object::Liqtuid;
 use std::cmp::min;
 
 const FULL_MIDDLE: &str = "███";
@@ -7,7 +7,7 @@ const EMPT_MIDDLE: &str = "⎸ ⎹";
 const EMPT_BOTTOM: &str =r"\⎽/";
 pub const KEYS: &str = "1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
 
-pub fn render_game(game: &Liqtui, columns: usize) -> String {
+pub fn render_game(game: &Liqtuid, columns: usize) -> String {
     let mut result = String::new();
     let bottles_num = game.bottles.len();
     for row_index in 0..(bottles_num as f32 / columns as f32).ceil() as usize {

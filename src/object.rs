@@ -13,7 +13,7 @@ fn initial_layout(bottles: usize, depth: usize, rng: &mut rand::rngs::ThreadRng)
     chunks
 }
 
-pub struct Liqtui {
+pub struct Liqtuid {
     pub bottles: Vec<Vec<usize>>,
     pub colours: Vec<u8>,
     pub depth: usize,
@@ -21,7 +21,7 @@ pub struct Liqtui {
     pub moves: usize,
 }
 
-impl Liqtui {
+impl Liqtuid {
     pub fn new(number: usize, depth: usize, empty: usize) -> Self {
         let mut rng = rand::rng();
         let mut bottles = initial_layout(number, depth, &mut rng);
