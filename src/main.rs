@@ -72,4 +72,5 @@ fn main() {
         }
     }
     println!("\x1b[?25h"); // show cursor
+    println!("Done in {} moves", game.moves);
 }

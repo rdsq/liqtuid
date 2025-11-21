@@ -18,6 +18,7 @@ pub struct Liqtui {
     pub colours: Vec<u8>,
     pub depth: usize,
     pub selected: Option<usize>,
+    pub moves: usize,
 }
 
 impl Liqtui {
@@ -32,6 +33,7 @@ impl Liqtui {
             colours: random_colours(&mut rng, number),
             depth,
             selected: None,
+            moves: 0,
         }
     }
     pub fn click_on_index(&mut self, index: usize) {
@@ -64,6 +66,7 @@ impl Liqtui {
                         self.bottles[index].push(we_steal_it_here);
                     }
                     self.selected = None;
+                    self.moves += 1;
                 }
             },
         }
