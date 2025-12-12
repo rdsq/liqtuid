@@ -72,5 +72,9 @@ fn main() {
         }
     }
     println!("\x1b[?25h"); // show cursor
-    println!("Done in {} moves", game.moves);
+    // kinda inefficient to run twice but whatever
+    // so it does not run when ctrl+c
+    if game.check_win() {
+        println!("Done in {} moves", game.moves);
+    }
 }
