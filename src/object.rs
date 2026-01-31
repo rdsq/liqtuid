@@ -13,16 +13,20 @@ fn initial_layout(bottles: usize, depth: usize, rng: &mut rand::rngs::ThreadRng)
     chunks
 }
 
+const KEYS: &str = "1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
+const NO_NUM_KEYS: &str = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
+
 pub struct Liqtuid {
     pub bottles: Vec<Vec<usize>>,
     pub colours: Vec<u8>,
     pub depth: usize,
     pub selected: Option<usize>,
     pub moves: usize,
+    pub keys: &'static str,
 }
 
 impl Liqtuid {
-    pub fn new(number: usize, depth: usize, empty: usize) -> Self {
+    pub fn new(number: usize, depth: usize, empty: usize, no_num_keys: bool) -> Self {
         let mut rng = rand::rng();
         let mut bottles = initial_layout(number, depth, &mut rng);
         for _ in 0..empty {
@@ -34,6 +38,7 @@ impl Liqtuid {
             depth,
             selected: None,
             moves: 0,
+            keys: if no_num_keys { NO_NUM_KEYS } else { KEYS },
         }
     }
     pub fn click_on_index(&mut self, index: usize) {

@@ -23,6 +23,10 @@ struct Args {
     /// Empty bottles to add
     #[arg(short, long, default_value_t = 2)]
     empty: usize,
+
+    /// Start indexing with `qwerty...` instead of `123456...`
+    #[arg(short = 'k', long)]
+    no_num_keys: bool,
 }
 
 const MSG: &str = "Press the keys shown over the bottles to select one, Ctrl+C to exit";
@@ -45,7 +49,7 @@ fn main() {
     } else if args.depth == 1 || args.number == 1 {
         println!("Congratulations on a fair victory");
     }
-    let mut game = Liqtuid::new(args.number, args.depth, args.empty);
+    let mut game = Liqtuid::new(args.number, args.depth, args.empty, args.no_num_keys);
 
     let (Width(width), _) = terminal_size().expect("failed to get terminal size");
     let columns = ((width as f64 + 3.0) / 6.0).floor() as usize;
@@ -57,7 +61,7 @@ fn main() {
         match getch.getch() {
             Ok(Key::Char(character)) => {
                 // playing the game
-                if let Some(index) = renderer::KEYS.find(character) {
+                if let Some(index) = game.keys.find(character) {
                     game.click_on_index(index);
                     print!("\r\x1b[{}A", lines_printed + (MSG.len() as f32 / width as f32).ceil() as usize);
                     lines_printed = render_full(&game, columns);

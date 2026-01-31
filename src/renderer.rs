@@ -5,7 +5,6 @@ const FULL_MIDDLE: &str = "███";
 const FULL_BOTTOM: &str = "◥█◤";
 const EMPT_MIDDLE: &str = "⎸ ⎹";
 const EMPT_BOTTOM: &str =r"\⎽/";
-pub const KEYS: &str = "1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
 
 pub fn render_game(game: &Liqtuid, columns: usize) -> String {
     let mut result = String::new();
@@ -30,7 +29,7 @@ pub fn render_game(game: &Liqtuid, columns: usize) -> String {
                 }
                 if depth_i_raw == -1 {
                     // special layer
-                    let key = *KEYS.as_bytes().get(bottle_index).unwrap_or(&45 /* ASCII for `-` */) as char;
+                    let key = *game.keys.as_bytes().get(bottle_index).unwrap_or(&45 /* ASCII for `-` */) as char;
                     if game.selected.as_ref() == Some(&bottle_index) {
                         // for selected bottles
                         result.push_str("\x1b[36;1m[");
