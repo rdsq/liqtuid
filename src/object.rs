@@ -17,6 +17,7 @@ const KEYS: &str = "1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVB
 const NO_NUM_KEYS: &str = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
 
 pub struct Liqtuid {
+    rng: ThreadRng,
     pub bottles: Vec<Vec<usize>>,
     pub colours: Vec<u8>,
     pub depth: usize,
@@ -32,9 +33,11 @@ impl Liqtuid {
         for _ in 0..empty {
             bottles.push(vec![]);
         }
+        let colours = random_colours(&mut rng, number);
         Self {
+            rng,
             bottles,
-            colours: random_colours(&mut rng, number),
+            colours,
             depth,
             selected: None,
             moves: 0,
@@ -86,5 +89,9 @@ impl Liqtuid {
             }
         }
         true // congrats
+    }
+    pub fn regenerate_colours(&mut self) {
+        let num = self.colours.len();
+        self.colours = random_colours(&mut self.rng, num);
     }
 }

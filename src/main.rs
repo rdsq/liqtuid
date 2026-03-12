@@ -39,6 +39,18 @@ fn render_full(game: &Liqtuid, columns: usize) -> usize {
     output.matches('\n').count()
 }
 
+fn reprint_all(game: &Liqtuid, columns: usize, lines_printed: usize, width: u16) -> usize {
+    print!("\r\x1b[{}A", lines_printed + (MSG.len() as f32 / width as f32).ceil() as usize);
+    render_full(&game, columns)
+}
+
+fn new_game(args: &Args) -> (Liqtuid, u16, usize) {
+    let game = Liqtuid::new(args.number, args.depth, args.empty, args.no_num_keys);
+    let (Width(width), _) = terminal_size().expect("failed to get terminal size");
+    let columns = ((width as f64 + 3.0) / 6.0).floor() as usize;
+    (game, width, columns)
+}
+
 fn main() {
     let args = Args::parse();
 
@@ -49,10 +61,7 @@ fn main() {
     } else if args.depth == 1 || args.number == 1 {
         println!("Congratulations on a fair victory");
     }
-    let mut game = Liqtuid::new(args.number, args.depth, args.empty, args.no_num_keys);
-
-    let (Width(width), _) = terminal_size().expect("failed to get terminal size");
-    let columns = ((width as f64 + 3.0) / 6.0).floor() as usize;
+    let (mut game, mut width, mut columns) = new_game(&args);
     print!("\x1b[?25l"); // hide cursor
     let mut lines_printed = render_full(&game, columns);
 
@@ -63,14 +72,23 @@ fn main() {
                 // playing the game
                 if let Some(index) = game.keys.find(character) {
                     game.click_on_index(index);
-                    print!("\r\x1b[{}A", lines_printed + (MSG.len() as f32 / width as f32).ceil() as usize);
-                    lines_printed = render_full(&game, columns);
+                    lines_printed = reprint_all(&game, columns, lines_printed, width);
                     if game.check_win() {
                         break;
                     }
                 }
             },
             Ok(Key::Ctrl('d')) | Ok(Key::Ctrl('c')) => break,
+            Ok(Key::Ctrl('r')) => {
+                // regenerate colours
+                game.regenerate_colours();
+                lines_printed = reprint_all(&game, columns, lines_printed, width);
+            },
+            Ok(Key::Ctrl('n')) => {
+                // new game
+                (game, width, columns) = new_game(&args);
+                lines_printed = reprint_all(&game, columns, lines_printed, width);
+            },
             Err(err) => { eprintln!("Error: {}", err); break; },
             Ok(_) => {},
         }

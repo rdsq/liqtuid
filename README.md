@@ -15,5 +15,17 @@ I really liked that kind of game, it was kind of addictive. The problem though: 
 Rust project = simple installation
 
 ```sh
+cargo install --git https://codeberg.org/rdsq/liqtuid
+# Or
 cargo install --git https://github.com/rdsq/liqtuid
 ```
+
+## Controls
+
+As mentioned above, you select bottles with `1-0;q-m;Q-M`
+
+To exit the game, press `Ctrl+D` or `Ctrl+C`
+
+If colours in game are ~~f#%ked~~ off, you can get new ones with `Ctrl+R`
+
+And to start a new game in game you can press `Ctrl+N`! Not sure why, but you can
