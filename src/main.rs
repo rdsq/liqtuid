@@ -34,9 +34,9 @@ const MSG: &str = "Press the keys shown over the bottles to select one, Ctrl+C t
 fn render_full(game: &Liqtuid, columns: usize) -> usize {
     let output = renderer::render_game(game, columns);
     print!("{}", output);
-    print!("\n\x1b[2m{}\x1b[0m", MSG);
+    print!("\x1b[2m{}\x1b[0m", MSG);
     std::io::stdout().flush().expect("Failed to flush");
-    output.matches('\n').count()
+    output.matches('\n').count() - 1
 }
 
 fn reprint_all(game: &Liqtuid, columns: usize, lines_printed: usize, width: u16) -> usize {
@@ -68,6 +68,24 @@ fn main() {
     let getch = Getch::new();
     loop {
         match getch.getch() {
+            // arrow keys
+            Ok(Key::Left) => {
+                game.move_cursor(-1);
+                lines_printed = reprint_all(&game, columns, lines_printed, width);
+            },
+            Ok(Key::Right) => {
+                game.move_cursor(1);
+                lines_printed = reprint_all(&game, columns, lines_printed, width);
+            },
+            Ok(Key::Char(' ')) | Ok(Key::Char('/')) => {
+                // also playing the game
+                game.click_on_cursor();
+                lines_printed = reprint_all(&game, columns, lines_printed, width);
+                if game.check_win() {
+                    break;
+                }
+            },
+            // keyboard
             Ok(Key::Char(character)) => {
                 // playing the game
                 if let Some(index) = game.keys.find(character) {
@@ -78,6 +96,7 @@ fn main() {
                     }
                 }
             },
+            // game controls
             Ok(Key::Ctrl('d')) | Ok(Key::Ctrl('c')) => break,
             Ok(Key::Ctrl('r')) => {
                 // regenerate colours

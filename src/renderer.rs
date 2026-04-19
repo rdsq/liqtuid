@@ -12,33 +12,33 @@ pub fn render_game(game: &Liqtuid, columns: usize) -> String {
     for row_index in 0..(bottles_num as f32 / columns as f32).ceil() as usize {
         // this splits all the bottles into rows
         let min_index = row_index * columns;
-        if row_index != 0 {
-            // little indent between rows
-            result.push('\n');
+        let range = min_index..min_index + min(columns, bottles_num - min_index);
+        // show the labels above the bottles
+        for bottle_index in range.clone() {
+            if bottle_index != min_index {
+                // add indent except for first in the row
+                result.push_str("   ");
+            }
+            let key = *game.keys.as_bytes().get(bottle_index).unwrap_or(&45 /* ASCII for `-` */) as char;
+            if game.selected.as_ref() == Some(&bottle_index) {
+                // for selected bottles
+                result.push_str("\x1b[36;1m[");
+            } else {
+                result.push_str("\x1b[2m[");
+            }
+            result.push(key);
+            result.push_str("]\x1b[0m");
         }
-        for depth_i_raw in -1..game.depth as isize {
+        result.push('\n');
+        // drawing the bottles
+        for depth_i in 0..game.depth as usize {
             // this goes down all the bottles in this row
             // also this code sucks
-            let depth_i = if depth_i_raw == -1 { 0 /* arbitrary, does not matter */ } else { depth_i_raw as usize };
             let is_last_layer = game.depth - 1 == depth_i;
-            for bottle_index in min_index..min_index + min(columns, bottles_num - min_index) {
+            for bottle_index in range.clone() {
                 // this goes through bottles in the row
                 if bottle_index != min_index {
-                    // add indent except for first in the row
                     result.push_str("   ");
-                }
-                if depth_i_raw == -1 {
-                    // special layer
-                    let key = *game.keys.as_bytes().get(bottle_index).unwrap_or(&45 /* ASCII for `-` */) as char;
-                    if game.selected.as_ref() == Some(&bottle_index) {
-                        // for selected bottles
-                        result.push_str("\x1b[36;1m[");
-                    } else {
-                        result.push_str("\x1b[2m[");
-                    }
-                    result.push(key);
-                    result.push_str("]\x1b[0m");
-                    continue;
                 }
                 let bottle = &game.bottles[bottle_index];
                 if let Some(element) = bottle.get(game.depth - depth_i - 1) {
@@ -52,6 +52,16 @@ pub fn render_game(game: &Liqtuid, columns: usize) -> String {
             }
             result.push('\n');
         }
+        // bottom row with the cursor
+        for bottle_index in range.clone() {
+            if bottle_index != min_index { result.push_str("   ") };
+            if game.cursor.as_ref() == Some(&bottle_index) {
+                result.push_str(" \x1b[36;1m^\x1b[0m ");
+            } else {
+                result.push_str("   ");
+            }
+        }
+        result.push('\n');
     }
     result
 }

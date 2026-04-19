@@ -21,7 +21,10 @@ pub struct Liqtuid {
     pub bottles: Vec<Vec<usize>>,
     pub colours: Vec<u8>,
     pub depth: usize,
+    // selected and cursor are different things
     pub selected: Option<usize>,
+    // cursor is for arrow keys
+    pub cursor: Option<usize>,
     pub moves: usize,
     pub keys: &'static str,
 }
@@ -40,11 +43,12 @@ impl Liqtuid {
             colours,
             depth,
             selected: None,
+            cursor: None,
             moves: 0,
             keys: if no_num_keys { NO_NUM_KEYS } else { KEYS },
         }
     }
-    pub fn click_on_index(&mut self, index: usize) {
+    fn click_on_index_internal(&mut self, index: usize) {
         if index > self.bottles.len() - 1 {
             // we do not like this input, so we hide our emotions (follow for more psychological advice)
             return;
@@ -79,6 +83,16 @@ impl Liqtuid {
             },
         }
     }
+    pub fn click_on_index(&mut self, index: usize) {
+        // reset cursor if clicked from keyboard
+        self.cursor = None;
+        self.click_on_index_internal(index)
+    }
+    pub fn click_on_cursor(&mut self) {
+        if let Some(index) = self.cursor {
+            self.click_on_index_internal(index);
+        }
+    }
     pub fn check_win(&self) -> bool {
         for bottle in &self.bottles {
             let length = bottle.len();
@@ -93,5 +107,22 @@ impl Liqtuid {
     pub fn regenerate_colours(&mut self) {
         let num = self.colours.len();
         self.colours = random_colours(&mut self.rng, num);
+    }
+    pub fn move_cursor(&mut self, num: isize) {
+        if let Some(cursor) = self.cursor {
+            // move cursor
+            let new_cursor = (cursor as isize + num) as usize;
+            if new_cursor < self.bottles.len() {
+                // good
+                self.cursor = Some(new_cursor);
+                return;
+            }
+        }
+        // else init cursor
+        self.cursor = Some(if num >= 0 {
+            0
+        } else {
+            self.bottles.len() - 1
+        });
     }
 }

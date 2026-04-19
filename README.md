@@ -22,10 +22,10 @@ cargo install --git https://github.com/rdsq/liqtuid
 
 ## Controls
 
-As mentioned above, you select bottles with `1-0;q-m;Q-M`
+As mentioned above, you select bottles with `1-0;q-m;Q-M`, but you can also navigate them with left and right keys and select them with spacebar or slash (because it is close to arrow keys)
 
 To exit the game, press `Ctrl+D` or `Ctrl+C`
 
-If colours in game are ~~f#%ked~~ off, you can get new ones with `Ctrl+R`
+If colours in game are ~~f#%ked~~ slightly off, you can get new ones with `Ctrl+R`
 
 And to start a new game in game you can press `Ctrl+N`! Not sure why, but you can
